@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Navbar from "./components/Navbar"; // Navbar should be imported only here
+import Navbar from "./components/Navbar"; // ✅ Navbar should be imported only here
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -12,9 +12,12 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import "./assets/styles.css";
 
-
-
 const App = () => {
+  // ✅ Update the Website Title
+  useEffect(() => {
+    document.title = "Proton Classes"; // Change this to your desired title
+  }, []);
+
   return (
     <Router>
       <Navbar /> {/* ✅ Navbar should be here only! */}
@@ -26,9 +29,7 @@ const App = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-<Route path="/terms-of-service" element={<TermsOfService />} />
-
-
+        <Route path="/terms-of-service" element={<TermsOfService />} />
       </Routes>
       <Footer />
     </Router>
@@ -36,4 +37,3 @@ const App = () => {
 };
 
 export default App;
-

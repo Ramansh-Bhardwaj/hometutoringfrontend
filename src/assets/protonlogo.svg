@@ -1,0 +1,8 @@
+<svg width="250" height="100" viewBox="0 0 250 100" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="15" fill="#FFD700"/>
+    <ellipse cx="50" cy="50" rx="30" ry="15" stroke="#A7C7E7" stroke-width="3" fill="none"/>
+    <ellipse cx="50" cy="50" rx="15" ry="30" stroke="#A7C7E7" stroke-width="3" fill="none"/>
+    <text x="80" y="55" font-size="24" fill="#333" font-family="Arial" font-weight="bold">
+        Proton Classes
+    </text>
+</svg>
