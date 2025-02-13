@@ -8,15 +8,11 @@ dotenv.config();
 
 const app = express();
 
-// ✅ Configure CORS to allow frontend (Both Localhost & Deployed)
-const allowedOrigins = [
-  "http://localhost:5173",
-   "https://hometutoringfrontend-bj1kpxp7g-ramansh-bhardwajs-projects.vercel.app/", 
-];
-
+// ✅ Allow ALL Origins for Testing (Temporary Fix)
 app.use(cors({
-  origin: allowedOrigins,
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  origin: "*",  // Allows all origins (for debugging)
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
 }));
 
