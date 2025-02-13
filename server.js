@@ -2,15 +2,27 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
+const sendEmail = require("./utils/email"); // 📩 Import Email Utility
 
 // Load environment variables
 dotenv.config();
 
 const app = express();
 
-// ✅ Allow ALL Origins for Testing (Temporary Fix)
+// ✅ Allow Frontend URL Only
+const allowedOrigins = [
+  "http://localhost:5173",  // Local Dev
+  "https://hometutoringfrontend-git-main-ramansh-bhardwajs-projects.vercel.app"  // Replace with your actual deployed frontend URL
+];
+
 app.use(cors({
-  origin: "*",  // Allows all origins (for debugging)
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
@@ -25,7 +37,7 @@ mongoose.connect(process.env.MONGO_URI, {
 })
 .then(() => console.log("✅ MongoDB Connected"))
 .catch(error => {
-  console.error("❌ Error connecting to MongoDB:", error);
+  console.error("❌ MongoDB Connection Error:", error);
   process.exit(1);
 });
 
@@ -57,6 +69,14 @@ app.post("/api/teachers/register", async (req, res) => {
 
     const newTeacher = new Teacher({ fullName, subject, experience, contact, qualification });
     await newTeacher.save();
+
+    // 📩 Send Email Notification to Admin
+    await sendEmail(
+      process.env.ADMIN_EMAIL,
+      "New Teacher Registration",
+      'A new teacher has registered!\n\nName: ${fullName}\nSubject: ${subject}\nExperience: ${experience} years\nContact: ${contact}\nQualification: ${qualification}'
+    );
+
     res.status(201).json({ message: "Teacher registered successfully" });
 
   } catch (error) {
@@ -77,6 +97,14 @@ app.post("/api/demo/book", async (req, res) => {
 
     const newDemo = new DemoBooking({ fullName, classCourse, board, mobile, email });
     await newDemo.save();
+
+    // 📩 Send Email Notification to Admin
+    await sendEmail(
+      process.env.ADMIN_EMAIL,
+      "New Demo Booking",
+      'A new demo class has been booked!\n\nName: ${fullName}\nClass: ${classCourse}\nBoard: ${board}\nMobile: ${mobile}\nEmail: ${email}'
+    );
+
     res.status(201).json({ message: "Demo class booked successfully" });
 
   } catch (error) {
@@ -93,5 +121,5 @@ app.get("/", (req, res) => {
 // ✅ Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server is running on port ${PORT}`);
+  console.log('🚀 Server is running on port ${PORT}');
 });
